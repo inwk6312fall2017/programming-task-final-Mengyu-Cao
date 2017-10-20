@@ -1,3 +1,16 @@
 from django.shortcuts import render
+from weather import Weather
 
-# Create your views here.
+from django.views.generic.base import TemplateView
+class HomeView(TemplateView):
+    template_name = 'home.html'
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        weather = Weather()
+        location = weather.lookup_by_location('Halifax')
+        condition = location.condition()
+        context['condition'] = condition
+        return self.render_to_response(context)
+
+
